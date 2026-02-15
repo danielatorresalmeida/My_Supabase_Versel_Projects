@@ -1,11 +1,15 @@
-"use client";
-
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
 
-export default function AuthErrorPage() {
-  const searchParams = useSearchParams();
-  const reason = searchParams.get("reason") ?? "Unknown authentication error.";
+type AuthErrorPageProps = {
+  searchParams: Promise<{
+    reason?: string;
+  }>;
+};
+
+export default async function AuthErrorPage({ searchParams }: AuthErrorPageProps) {
+  const params = await searchParams;
+  const reason =
+    typeof params.reason === "string" ? params.reason : "Unknown authentication error.";
 
   return (
     <main className="mx-auto max-w-md space-y-4 p-6">
