@@ -1,7 +1,40 @@
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import { createSupabaseServerClient } from "@/src/lib/supabase/server";
 
-export default async function Home() {
+type HomePageProps = {
+  searchParams: Promise<{
+    code?: string;
+    token_hash?: string;
+    type?: string;
+    next?: string;
+  }>;
+};
+
+export default async function Home({ searchParams }: HomePageProps) {
+  const params = await searchParams;
+  const code = typeof params.code === "string" ? params.code : null;
+
+  if (code) {
+    const callbackParams = new URLSearchParams();
+    callbackParams.set("code", code);
+
+    if (typeof params.token_hash === "string") {
+      callbackParams.set("token_hash", params.token_hash);
+    }
+    if (typeof params.type === "string") {
+      callbackParams.set("type", params.type);
+    }
+
+    const next =
+      typeof params.next === "string" && params.next.startsWith("/")
+        ? params.next
+        : "/reset-password/update";
+    callbackParams.set("next", next);
+
+    redirect(`/auth/callback?${callbackParams.toString()}`);
+  }
+
   const supabase = await createSupabaseServerClient();
   const {
     data: { user },

@@ -126,6 +126,12 @@ export default function AuthForm({ mode, nextPath }: AuthFormProps) {
         </button>
       </form>
 
+      {!isSignUp && (
+        <Link className="inline-block text-sm underline" href="/reset-password">
+          Forgot your password?
+        </Link>
+      )}
+
       <Link className="inline-block text-sm underline" href={switchHref}>
         {isSignUp ? "Already have an account? Sign in" : "Need an account? Sign up"}
       </Link>
