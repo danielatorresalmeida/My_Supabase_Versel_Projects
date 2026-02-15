@@ -4,6 +4,15 @@ import Link from "next/link";
 import { FormEvent, useMemo, useState } from "react";
 import { createSupabaseBrowserClient } from "@/src/lib/supabase/client";
 
+function formatResetError(message: string) {
+  const normalized = message.toLowerCase();
+  if (normalized.includes("rate limit")) {
+    return "Too many reset requests. This project currently allows about 2 auth emails per hour. Please wait and try again.";
+  }
+
+  return message;
+}
+
 export default function ResetPasswordPage() {
   const supabase = useMemo(() => createSupabaseBrowserClient(), []);
 
@@ -28,7 +37,7 @@ export default function ResetPasswordPage() {
       });
 
       if (resetError) {
-        setError(resetError.message);
+        setError(formatResetError(resetError.message));
         return;
       }
 
@@ -71,6 +80,10 @@ export default function ResetPasswordPage() {
         >
           {loading ? "Please wait..." : "Send reset link"}
         </button>
+
+        <p className="text-xs opacity-70">
+          Note: default Supabase email is rate-limited. If you hit limits, wait before retrying.
+        </p>
       </form>
 
       <Link className="inline-block text-sm underline" href="/sign-in">
