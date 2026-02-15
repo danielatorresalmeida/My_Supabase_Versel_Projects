@@ -28,8 +28,8 @@ export default async function Home() {
       ) : (
         <>
           <p className="text-sm opacity-80">No active session.</p>
-          <Link className="inline-block rounded bg-black px-3 py-2 text-sm text-white" href="/auth">
-            Go to /auth
+          <Link className="inline-block rounded bg-black px-3 py-2 text-sm text-white" href="/sign-in">
+            Go to /sign-in
           </Link>
         </>
       )}

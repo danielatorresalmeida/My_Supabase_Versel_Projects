@@ -8,14 +8,18 @@ import { createSupabaseBrowserClient } from "@/src/lib/supabase/client";
 type AuthMode = "sign-in" | "sign-up";
 
 type AuthFormProps = {
+  mode: AuthMode;
   nextPath: string;
 };
 
-export default function AuthForm({ nextPath }: AuthFormProps) {
+export default function AuthForm({ mode, nextPath }: AuthFormProps) {
   const supabase = useMemo(() => createSupabaseBrowserClient(), []);
   const router = useRouter();
+  const isSignUp = mode === "sign-up";
+  const switchHref = `${
+    isSignUp ? "/sign-in" : "/sign-up"
+  }?next=${encodeURIComponent(nextPath)}`;
 
-  const [mode, setMode] = useState<AuthMode>("sign-in");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
@@ -29,7 +33,7 @@ export default function AuthForm({ nextPath }: AuthFormProps) {
     setLoading(true);
 
     try {
-      if (mode === "sign-up") {
+      if (isSignUp) {
         const redirectTo = `${window.location.origin}/auth/callback?next=${encodeURIComponent(
           nextPath
         )}`;
@@ -73,29 +77,10 @@ export default function AuthForm({ nextPath }: AuthFormProps) {
 
   return (
     <main className="mx-auto max-w-md space-y-6 p-6">
-      <h1 className="text-2xl font-semibold">Authentication</h1>
-      <p className="text-sm opacity-80">Sign in or create an account.</p>
-
-      <div className="flex gap-2">
-        <button
-          className={`rounded px-3 py-2 text-sm ${
-            mode === "sign-in" ? "bg-black text-white" : "border"
-          }`}
-          type="button"
-          onClick={() => setMode("sign-in")}
-        >
-          Sign in
-        </button>
-        <button
-          className={`rounded px-3 py-2 text-sm ${
-            mode === "sign-up" ? "bg-black text-white" : "border"
-          }`}
-          type="button"
-          onClick={() => setMode("sign-up")}
-        >
-          Sign up
-        </button>
-      </div>
+      <h1 className="text-2xl font-semibold">{isSignUp ? "Create account" : "Sign in"}</h1>
+      <p className="text-sm opacity-80">
+        {isSignUp ? "Create your account to continue." : "Sign in to continue."}
+      </p>
 
       <form onSubmit={onSubmit} className="space-y-4">
         <div className="space-y-2">
@@ -137,9 +122,13 @@ export default function AuthForm({ nextPath }: AuthFormProps) {
           type="submit"
           disabled={loading}
         >
-          {loading ? "Please wait..." : mode === "sign-in" ? "Sign in" : "Create account"}
+          {loading ? "Please wait..." : isSignUp ? "Create account" : "Sign in"}
         </button>
       </form>
+
+      <Link className="inline-block text-sm underline" href={switchHref}>
+        {isSignUp ? "Already have an account? Sign in" : "Need an account? Sign up"}
+      </Link>
 
       <Link className="inline-block text-sm underline" href="/">
         Back to home

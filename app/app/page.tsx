@@ -9,7 +9,7 @@ export default async function AppPage() {
   } = await supabase.auth.getUser();
 
   if (!user) {
-    redirect("/auth?next=/app");
+    redirect("/sign-in?next=/app");
   }
 
   return (

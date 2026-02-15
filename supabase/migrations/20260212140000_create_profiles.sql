@@ -3,6 +3,7 @@ create table if not exists public.profiles (
   email text unique,
   full_name text,
   avatar_url text,
+  role text not null default 'user',
   created_at timestamptz not null default timezone('utc', now()),
   updated_at timestamptz not null default timezone('utc', now())
 );

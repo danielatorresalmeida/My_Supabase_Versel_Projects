@@ -1,17 +1,17 @@
-import { redirect } from "next/navigation";
+import AuthForm from "@/app/auth/auth-form";
 
-type AuthPageProps = {
+type SignInPageProps = {
   searchParams: Promise<{
     next?: string;
   }>;
 };
 
-export default async function AuthPage({ searchParams }: AuthPageProps) {
+export default async function SignInPage({ searchParams }: SignInPageProps) {
   const params = await searchParams;
   const next =
     typeof params.next === "string" && params.next.startsWith("/")
       ? params.next
       : "/app";
 
-  redirect(`/sign-in?next=${encodeURIComponent(next)}`);
+  return <AuthForm mode="sign-in" nextPath={next} />;
 }

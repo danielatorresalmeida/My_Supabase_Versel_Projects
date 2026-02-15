@@ -15,8 +15,8 @@ export default async function AuthErrorPage({ searchParams }: AuthErrorPageProps
     <main className="mx-auto max-w-md space-y-4 p-6">
       <h1 className="text-2xl font-semibold">Authentication Error</h1>
       <p className="text-sm text-red-600">{reason}</p>
-      <Link className="inline-block text-sm underline" href="/auth">
-        Go to auth page
+      <Link className="inline-block text-sm underline" href="/sign-in">
+        Go to sign-in page
       </Link>
     </main>
   );

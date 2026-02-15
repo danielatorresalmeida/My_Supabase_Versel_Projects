@@ -37,7 +37,7 @@ export async function proxy(request: NextRequest) {
 
   if (!user && request.nextUrl.pathname.startsWith("/app")) {
     const redirectUrl = request.nextUrl.clone();
-    redirectUrl.pathname = "/auth";
+    redirectUrl.pathname = "/sign-in";
     redirectUrl.searchParams.set(
       "next",
       request.nextUrl.pathname + request.nextUrl.search
