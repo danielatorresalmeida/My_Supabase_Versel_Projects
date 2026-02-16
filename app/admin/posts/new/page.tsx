@@ -1,5 +1,5 @@
-import Link from "next/link";
 import { createPostAction } from "../actions";
+import PostEditorForm from "../post-editor-form";
 
 type NewPostPageProps = {
   searchParams: Promise<{
@@ -23,58 +23,11 @@ export default async function NewPostPage({ searchParams }: NewPostPageProps) {
         </p>
       )}
 
-      <form action={createPostAction} className="space-y-4">
-        <div className="space-y-2">
-          <label className="text-sm" htmlFor="title">
-            Title
-          </label>
-          <input
-            className="w-full rounded border bg-transparent px-3 py-2"
-            id="title"
-            name="title"
-            required
-            type="text"
-          />
-        </div>
-
-        <div className="space-y-2">
-          <label className="text-sm" htmlFor="slug">
-            Slug (optional)
-          </label>
-          <input
-            className="w-full rounded border bg-transparent px-3 py-2"
-            id="slug"
-            name="slug"
-            placeholder="my-first-post"
-            type="text"
-          />
-        </div>
-
-        <div className="space-y-2">
-          <label className="text-sm" htmlFor="content_markdown">
-            Markdown content
-          </label>
-          <textarea
-            className="min-h-64 w-full rounded border bg-transparent px-3 py-2"
-            id="content_markdown"
-            name="content_markdown"
-          />
-        </div>
-
-        <label className="flex items-center gap-2 text-sm">
-          <input name="published" type="checkbox" />
-          Publish now
-        </label>
-
-        <div className="flex gap-2">
-          <button className="rounded bg-black px-4 py-2 text-sm text-white" type="submit">
-            Create post
-          </button>
-          <Link className="rounded border px-4 py-2 text-sm" href="/admin/posts">
-            Cancel
-          </Link>
-        </div>
-      </form>
+      <PostEditorForm
+        action={createPostAction}
+        cancelHref="/admin/posts"
+        submitLabel="Create post"
+      />
     </main>
   );
 }

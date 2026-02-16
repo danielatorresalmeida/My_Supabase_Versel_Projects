@@ -1,4 +1,4 @@
-import Link from "next/link";
+﻿import Link from "next/link";
 import { redirect } from "next/navigation";
 import { createSupabaseServerClient } from "@/src/lib/supabase/server";
 import { deletePostAction } from "./actions";
@@ -56,7 +56,7 @@ export default async function AdminPostsPage({ searchParams }: AdminPostsPagePro
                 <div className="space-y-1">
                   <h2 className="text-lg font-medium">{post.title}</h2>
                   <p className="text-xs opacity-70">
-                    /blog/{post.slug} ·{" "}
+                    /blog/{post.slug} -{" "}
                     {post.published ? (
                       <span className="text-green-300">published</span>
                     ) : (

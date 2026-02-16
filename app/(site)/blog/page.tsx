@@ -1,11 +1,18 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { createSupabaseServerClient } from "@/src/lib/supabase/server";
+import { excerptMarkdown } from "@/src/lib/markdown";
+
+export const metadata: Metadata = {
+  title: "Blog | Daniela Torres",
+  description: "Published posts and build logs from the project roadmap.",
+};
 
 export default async function BlogPage() {
   const supabase = await createSupabaseServerClient();
   const { data: posts, error } = await supabase
     .from("p1_posts")
-    .select("id, title, slug, created_at")
+    .select("id, title, slug, content_markdown, created_at")
     .eq("published", true)
     .order("created_at", { ascending: false });
 
@@ -22,6 +29,7 @@ export default async function BlogPage() {
             <article className="space-y-1 rounded border p-4" key={post.id}>
               <h2 className="text-lg font-medium">{post.title}</h2>
               <p className="text-xs opacity-70">{new Date(post.created_at).toLocaleDateString()}</p>
+              <p className="text-sm opacity-80">{excerptMarkdown(post.content_markdown, 180)}</p>
               <Link className="text-sm underline" href={`/blog/${post.slug}`}>
                 Read post
               </Link>

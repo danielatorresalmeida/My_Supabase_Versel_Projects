@@ -1,7 +1,7 @@
-import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import { createSupabaseServerClient } from "@/src/lib/supabase/server";
 import { updatePostAction } from "../../actions";
+import PostEditorForm from "../../post-editor-form";
 
 type EditPostPageProps = {
   params: Promise<{
@@ -54,63 +54,18 @@ export default async function EditPostPage({ params, searchParams }: EditPostPag
         </p>
       )}
 
-      <form action={updatePostAction} className="space-y-4">
-        <input name="id" type="hidden" value={post.id} />
-
-        <div className="space-y-2">
-          <label className="text-sm" htmlFor="title">
-            Title
-          </label>
-          <input
-            className="w-full rounded border bg-transparent px-3 py-2"
-            defaultValue={post.title}
-            id="title"
-            name="title"
-            required
-            type="text"
-          />
-        </div>
-
-        <div className="space-y-2">
-          <label className="text-sm" htmlFor="slug">
-            Slug
-          </label>
-          <input
-            className="w-full rounded border bg-transparent px-3 py-2"
-            defaultValue={post.slug}
-            id="slug"
-            name="slug"
-            required
-            type="text"
-          />
-        </div>
-
-        <div className="space-y-2">
-          <label className="text-sm" htmlFor="content_markdown">
-            Markdown content
-          </label>
-          <textarea
-            className="min-h-64 w-full rounded border bg-transparent px-3 py-2"
-            defaultValue={post.content_markdown}
-            id="content_markdown"
-            name="content_markdown"
-          />
-        </div>
-
-        <label className="flex items-center gap-2 text-sm">
-          <input defaultChecked={post.published} name="published" type="checkbox" />
-          Published
-        </label>
-
-        <div className="flex gap-2">
-          <button className="rounded bg-black px-4 py-2 text-sm text-white" type="submit">
-            Save changes
-          </button>
-          <Link className="rounded border px-4 py-2 text-sm" href="/admin/posts">
-            Back
-          </Link>
-        </div>
-      </form>
+      <PostEditorForm
+        action={updatePostAction}
+        cancelHref="/admin/posts"
+        defaults={{
+          id: post.id,
+          title: post.title,
+          slug: post.slug,
+          contentMarkdown: post.content_markdown,
+          published: post.published,
+        }}
+        submitLabel="Save changes"
+      />
     </main>
   );
 }
