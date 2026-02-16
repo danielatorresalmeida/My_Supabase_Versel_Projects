@@ -16,9 +16,7 @@ export default function AuthForm({ mode, nextPath }: AuthFormProps) {
   const supabase = useMemo(() => createSupabaseBrowserClient(), []);
   const router = useRouter();
   const isSignUp = mode === "sign-up";
-  const switchHref = `${
-    isSignUp ? "/sign-in" : "/sign-up"
-  }?next=${encodeURIComponent(nextPath)}`;
+  const switchHref = `${isSignUp ? "/sign-in" : "/sign-up"}?next=${encodeURIComponent(nextPath)}`;
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");

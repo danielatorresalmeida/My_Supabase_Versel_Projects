@@ -51,9 +51,7 @@ export default function UpdatePasswordPage() {
   return (
     <main className="mx-auto max-w-md p-6">
       <h1 className="text-2xl font-semibold">Set your password</h1>
-      <p className="mt-2 text-sm opacity-80">
-        Enter your new password to finish account recovery.
-      </p>
+      <p className="mt-2 text-sm opacity-80">Enter your new password to finish account recovery.</p>
 
       {loading ? (
         <p className="mt-6">Loading...</p>

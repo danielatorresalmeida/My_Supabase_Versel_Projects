@@ -1,11 +1,7 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
-const PROTECTED_EXACT_ROUTES = new Set([
-  "/shop/cart",
-  "/shop/checkout",
-  "/shop/orders",
-]);
+const PROTECTED_EXACT_ROUTES = new Set(["/shop/cart", "/shop/checkout", "/shop/orders"]);
 
 function isAdminPath(pathname: string) {
   return pathname.startsWith("/admin");
@@ -13,9 +9,7 @@ function isAdminPath(pathname: string) {
 
 function isProtectedPath(pathname: string) {
   return (
-    pathname.startsWith("/app") ||
-    isAdminPath(pathname) ||
-    PROTECTED_EXACT_ROUTES.has(pathname)
+    pathname.startsWith("/app") || isAdminPath(pathname) || PROTECTED_EXACT_ROUTES.has(pathname)
   );
 }
 
@@ -33,9 +27,7 @@ export async function proxy(request: NextRequest) {
           return request.cookies.getAll();
         },
         setAll(cookiesToSet) {
-          cookiesToSet.forEach(({ name, value }) =>
-            request.cookies.set(name, value)
-          );
+          cookiesToSet.forEach(({ name, value }) => request.cookies.set(name, value));
 
           response = NextResponse.next({
             request,
@@ -58,10 +50,7 @@ export async function proxy(request: NextRequest) {
   if (!user && isProtectedPath(pathname)) {
     const redirectUrl = request.nextUrl.clone();
     redirectUrl.pathname = "/sign-in";
-    redirectUrl.searchParams.set(
-      "next",
-      pathname + request.nextUrl.search
-    );
+    redirectUrl.searchParams.set("next", pathname + request.nextUrl.search);
     return NextResponse.redirect(redirectUrl);
   }
 
@@ -84,11 +73,5 @@ export async function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: [
-    "/app/:path*",
-    "/admin/:path*",
-    "/shop/cart",
-    "/shop/checkout",
-    "/shop/orders",
-  ],
+  matcher: ["/app/:path*", "/admin/:path*", "/shop/cart", "/shop/checkout", "/shop/orders"],
 };
