@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { createSupabaseServerClient } from "@/src/lib/supabase/server";
+import AdminRequiredBanner from "./admin-required-banner";
 
 export default async function AppPage() {
   const supabase = await createSupabaseServerClient();
@@ -15,6 +16,7 @@ export default async function AppPage() {
   return (
     <main className="mx-auto max-w-xl space-y-6 p-6">
       <h1 className="text-2xl font-semibold">App Area</h1>
+      <AdminRequiredBanner />
       <p className="text-sm opacity-80">You are logged in as {user.email}</p>
 
       <form action="/auth/signout" method="post">

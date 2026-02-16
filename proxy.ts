@@ -1,6 +1,24 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
+const PROTECTED_EXACT_ROUTES = new Set([
+  "/shop/cart",
+  "/shop/checkout",
+  "/shop/orders",
+]);
+
+function isAdminPath(pathname: string) {
+  return pathname.startsWith("/admin");
+}
+
+function isProtectedPath(pathname: string) {
+  return (
+    pathname.startsWith("/app") ||
+    isAdminPath(pathname) ||
+    PROTECTED_EXACT_ROUTES.has(pathname)
+  );
+}
+
 export async function proxy(request: NextRequest) {
   let response = NextResponse.next({
     request,
@@ -35,19 +53,42 @@ export async function proxy(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser();
 
-  if (!user && request.nextUrl.pathname.startsWith("/app")) {
+  const pathname = request.nextUrl.pathname;
+
+  if (!user && isProtectedPath(pathname)) {
     const redirectUrl = request.nextUrl.clone();
     redirectUrl.pathname = "/sign-in";
     redirectUrl.searchParams.set(
       "next",
-      request.nextUrl.pathname + request.nextUrl.search
+      pathname + request.nextUrl.search
     );
     return NextResponse.redirect(redirectUrl);
+  }
+
+  if (user && isAdminPath(pathname)) {
+    const { data: profile, error } = await supabase
+      .from("profiles")
+      .select("role")
+      .eq("id", user.id)
+      .maybeSingle();
+
+    if (error || profile?.role !== "admin") {
+      const redirectUrl = request.nextUrl.clone();
+      redirectUrl.pathname = "/app";
+      redirectUrl.searchParams.set("error", "admin_required");
+      return NextResponse.redirect(redirectUrl);
+    }
   }
 
   return response;
 }
 
 export const config = {
-  matcher: ["/app/:path*"],
+  matcher: [
+    "/app/:path*",
+    "/admin/:path*",
+    "/shop/cart",
+    "/shop/checkout",
+    "/shop/orders",
+  ],
 };
